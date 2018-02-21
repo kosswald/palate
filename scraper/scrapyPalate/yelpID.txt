@@ -1,0 +1,13 @@
+Secret key:
+
+jz4OzUEFK6GrzixsAQLL3Q2qF4GJxYhJaAUv4r47UHMlF1vl7RfXhVKO8YbZRpch
+Hide Warning: client secret is going away! Use your API Key instead.
+
+API Key:
+
+ph4AR6uxYuKLznMtCVxMcUrYzgVPhigppJAtwmlCt9Bybh2LRwJ-tP-eXGxaqlPQZaSfwhX7WblC05XCdd20Cyu5DUubbf-Uca-28rttk1YZHDVgBFZHHezDaAiNWnYx
+
+Client ID:
+
+53s0cIX5yxh1hqTThiuf2g
+
