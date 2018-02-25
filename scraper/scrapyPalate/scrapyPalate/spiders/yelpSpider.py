@@ -1,11 +1,12 @@
 import scrapy
 import json
-from scrapyPalate.items import Picture
+from scrapyPalate.items import Image
 from scrapyPalate.items import Restaurant
 
 class yelpSpider(scrapy.Spider):
     name = 'yelpSpider'
 
+    # DELETE THIS KEY BEFORE MAKING REPO PUBLIC
     API_Key = 'ph4AR6uxYuKLznMtCVxMcUrYzgVPhigppJAtwmlCt9Bybh2LRwJ-tP-eXGxaqlPQZaSfwhX7WblC05XCdd20Cyu5DUubbf-Uca-28rttk1YZHDVgBFZHHezDaAiNWnYx'
 
     BUSINESS_SEARCH_URL = 'https://api.yelp.com/v3/businesses/search'
@@ -17,12 +18,12 @@ class yelpSpider(scrapy.Spider):
     PHOTO_LINK = 'https://s3-media3.fl.yelpcdn.com/bphoto/'
     PHOTO_EXT = '/o.jpg'
 
+
     def start_requests(self):
         print(self.BUSINESS_SEARCH_URL + self.SEARCH_PARAMS)
         return [scrapy.Request(url=self.BUSINESS_SEARCH_URL + self.SEARCH_PARAMS,
-                                 headers={'Authorization': 'Bearer ' + self.API_Key},
-                                 method='GET',
-                                 callback=self.Jparse)]
+                                headers={'Authorization': 'Bearer ' + self.API_Key},
+                                callback=self.Jparse)]
 
     def Jparse(self, response):
         try:
@@ -39,8 +40,10 @@ class yelpSpider(scrapy.Spider):
 
             for id in idList:
                 print(id)
-                yield scrapy.Request(url=self.BUSINESS_PHOTOS_URL + id + self.BUSINESS_PHOTO_PARAMS,
-                                     callback=self.picPageParse)
+                request = scrapy.Request(url=self.BUSINESS_PHOTOS_URL + id + self.BUSINESS_PHOTO_PARAMS,
+                                         callback=self.picPageParse)
+                request.meta['item'] = {'id': id}
+                yield request
         except:
             print('JPARSE FAILED')
 
@@ -49,27 +52,29 @@ class yelpSpider(scrapy.Spider):
         print('PICPARSEREACHED')
         #picture_class = 'photo-box-img'
         gallery_class = 'media-landing_gallery photos'
-        pic_id = '@data-photo-id'
+        pic_id_xpath = '@data-photo-id'
         pic_xpath = '// *[ @ id = "super-container"] / div[2] / div / div[2] / div[2] / ul / li'
         pic_ids = []
 
         # xpath to element in gallery // *[ @ id = "super-container"] / div[2] / div / div[2] / div[2] / ul / li[1]
         # xpath to gallery // *[ @ id = "super-container"] / div[2] / div / div[2] / div[2] / ul
 
-        print(response.xpath(pic_xpath).xpath(pic_id).extract())
-        pic_ids = response.xpath(pic_xpath).xpath(pic_id)
-        pics = []
+        print(response.xpath(pic_xpath).xpath(pic_id_xpath).extract())
+        pic_ids = response.xpath(pic_xpath).xpath(pic_id_xpath)
+
+        restaurant_id = response.meta['item']['id']
+        print('RESTAURANT ID: ' + restaurant_id)
 
         for id in pic_ids:
             link = self.PHOTO_LINK + id.extract() + self.PHOTO_EXT
-            pic = Picture(id=id.extract(), file_urls=link)
-            print('ID: ' + pic['id'])
-            print('Link: ' + pic['link'])
-            pics.append(pic)
+            pic = Image(restaurant_id=restaurant_id,
+                        image_id=id.extract(),
+                        image_urls=link)
+            print('ID: ' + pic['image_id'])
+            print('Link: ' + pic['image_urls'])
+            yield pic
 
-        yield Restaurant(id=id,
-                         link=self.BUSINESS_PHOTOS_URL + id.extract() + self.BUSINESS_PHOTO_PARAMS,
-                         pics=pics)
-
+        #print(self.RESTAURANT_ID)
+        #yield Restaurant(id=self.RESTAURANT_ID, imgs=pics)
 
 

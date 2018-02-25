@@ -66,9 +66,11 @@ ROBOTSTXT_OBEY = False
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'scrapyPalate.pipelines.ScrapypalatePipeline': 300,
+    'scrapyPalate.pipelines.ImagePipeline': 300
 }
 
-#IMAGES_STORE = 's3://palate/photos/'
+IMAGES_STORE = '/Users/kristof/Desktop/USC/SEP/palate/scraper/scrapyPalate/data/'
+#IMAGES_STORE = 's3://palate/photos/restaurants'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -81,7 +83,7 @@ AUTOTHROTTLE_ENABLED = True
 # each remote server
 #AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 # Enable showing throttling stats for every response received:
-AUTOTHROTTLE_DEBUG = False
+AUTOTHROTTLE_DEBUG = True
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings

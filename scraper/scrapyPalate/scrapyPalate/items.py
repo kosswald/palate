@@ -14,15 +14,16 @@ class ScrapypalateItem(scrapy.Item):
     pass
 
 
-class Picture(scrapy.Item):
-    # define the fields for your
-    id =scrapy.Field()
-    file_urls = scrapy.Field()
-    #stored_at = scrapy.Field()
+class Image(scrapy.Item):
+    restaurant_id = scrapy.Field()
+    image_id = scrapy.Field()
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
+    #session_path = scrapy.Field()
     pass
+
 
 class Restaurant(scrapy.Item):
     id = scrapy.Field()
-    link = scrapy.Field()
-    pics = scrapy.Field()
+    imgs = scrapy.Field()
     pass
