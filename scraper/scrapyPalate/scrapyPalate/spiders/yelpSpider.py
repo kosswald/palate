@@ -1,7 +1,6 @@
 import scrapy
 import json
 from scrapyPalate.items import Image
-from scrapyPalate.items import Restaurant
 
 class yelpSpider(scrapy.Spider):
     name = 'yelpSpider'
@@ -20,18 +19,22 @@ class yelpSpider(scrapy.Spider):
 
 
     def start_requests(self):
+        # Makes request to yelp fusion API for restaurants
+        # Response gives 20 restaurants at a time
+        # TODO: Iterate through all total restaurants
         print(self.BUSINESS_SEARCH_URL + self.SEARCH_PARAMS)
         return [scrapy.Request(url=self.BUSINESS_SEARCH_URL + self.SEARCH_PARAMS,
                                 headers={'Authorization': 'Bearer ' + self.API_Key},
                                 callback=self.Jparse)]
 
     def Jparse(self, response):
+        # Take restaurants and scrape yelp.com for images
         try:
             print('JPARSE REACHED')
             jsonresponse = json.loads(response.body_as_unicode())
             print(jsonresponse['businesses'][0]['id'])
 
-            totalResponse = jsonresponse['total']
+            totalResponse = jsonresponse['total'] # To be used later for iterating through all restaurants
             idList = []
 
             print('LOOP REACHED')
@@ -48,16 +51,12 @@ class yelpSpider(scrapy.Spider):
             print('JPARSE FAILED')
 
     def picPageParse(self, response):
+        # Takes picture page
+        # TODO: Iterate through all picture pages
+        print('PICPARSE REACHED')
 
-        print('PICPARSEREACHED')
-        #picture_class = 'photo-box-img'
-        gallery_class = 'media-landing_gallery photos'
         pic_id_xpath = '@data-photo-id'
         pic_xpath = '// *[ @ id = "super-container"] / div[2] / div / div[2] / div[2] / ul / li'
-        pic_ids = []
-
-        # xpath to element in gallery // *[ @ id = "super-container"] / div[2] / div / div[2] / div[2] / ul / li[1]
-        # xpath to gallery // *[ @ id = "super-container"] / div[2] / div / div[2] / div[2] / ul
 
         print(response.xpath(pic_xpath).xpath(pic_id_xpath).extract())
         pic_ids = response.xpath(pic_xpath).xpath(pic_id_xpath)
@@ -73,8 +72,3 @@ class yelpSpider(scrapy.Spider):
             print('ID: ' + pic['image_id'])
             print('Link: ' + pic['image_urls'])
             yield pic
-
-        #print(self.RESTAURANT_ID)
-        #yield Restaurant(id=self.RESTAURANT_ID, imgs=pics)
-
-
