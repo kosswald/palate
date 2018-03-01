@@ -68,7 +68,9 @@ class yelpSpider(scrapy.Spider):
             link = self.PHOTO_LINK + id.extract() + self.PHOTO_EXT
             pic = Image(restaurant_id=restaurant_id,
                         image_id=id.extract(),
-                        image_urls=link)
+                        image_urls=link,
+                        storage=self.settings.get('IMAGES_STORE'))
             print('ID: ' + pic['image_id'])
             print('Link: ' + pic['image_urls'])
+            print(self.settings.get('IMAGES_STORE'))
             yield pic
