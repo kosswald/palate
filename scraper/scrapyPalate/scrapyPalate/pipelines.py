@@ -38,7 +38,11 @@ class ImagePipeline(ImagesPipeline):
         pic_restaurant = item['restaurant_id']
         image_store = item['storage']
 
+        from PIL import Image
         local_path_to_image = image_store + pic_storage
+        img = Image.open(local_path_to_image)
+        if results[0][1]
+
         bucket_path_to_image = 'photos/restaurants/' + pic_restaurant + '/' + pic_name + '.jpg'
         metadata = {'ContentType': 'image/jpeg', 'ACL': 'public-read'}
 
